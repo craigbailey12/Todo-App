@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List</title>
+</head>
+<body>
+  <h1>To-Do List</h1>
+  <form action="/add" method="post">
+    <input type="text" name="name" placeholder="New Task" required>
+    <button type="submit">Add</button>
+  </form>
+  <ul>
+    <% todos.forEach(todo => { %>
+      <li>
+        <%= todo.name %> - <%= todo.status %>
+        <form action="/update" method="post" style="display:inline;" onsubmit="return isStatusChanged()">
+            <input type="hidden" name="id" value="<%= todo.id %>">
+            <select name="status" id="statusSelect">
+                <option value="pending" <%= todo.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                <option value="completed" <%= todo.status === 'completed' ? 'selected' : '' %>>Completed</option>
+            </select>
+            <button type="submit">Update</button>
+        </form>
+        <script>
+            function isStatusChanged() {
+                const selectedOption = document.getElementById('statusSelect').value;
+                return selectedOption !== '<%= todo.status %>'; 
+            }
+        </script>
+        <form action="/delete" method="post" style="display:inline;">
+          <input type="hidden" name="id" value="<%= todo.id %>">
+          <button type="submit">Delete</button>
+        </form>
+      </li>
+    <% }) %>
+  </ul>
+</body>
+</html>
